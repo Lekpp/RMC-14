@@ -16,6 +16,8 @@ using Content.Shared.Stunnable;
 using Content.Shared.Tag;
 using Content.Shared.Tools.Systems;
 using Content.Shared._RMC14.Doors;
+using Content.Shared._RMC14.Xenonids;
+using Content.Shared.Mobs.Components;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map.Components;
@@ -630,6 +632,13 @@ public abstract partial class SharedDoorSystem : EntitySystem
             return;
 
         var otherUid = args.OtherEntity;
+
+        if (HasComp<XenoComponent>(otherUid))
+    {
+        var mobState = CompOrNull<MobStateComponent>(otherUid);
+        if (mobState?.CurrentState == MobState.Dead)
+            return; 
+    }
 
         if (Tags.HasTag(otherUid, DoorBumpTag))
             TryOpen(uid, door, otherUid, quiet: door.State == DoorState.Denying, predicted: true);
